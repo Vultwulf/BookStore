@@ -1,8 +1,7 @@
-﻿using System;
+﻿using BookStore.Models;
+using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using BookStore.Models;
-using Microsoft.AspNetCore.Mvc;
 
 namespace BookStore.Controllers
 {
@@ -31,6 +30,5 @@ namespace BookStore.Controllers
         {
             BookEntity.CreateAsync(bookDTO);
         }
-
     }
 }

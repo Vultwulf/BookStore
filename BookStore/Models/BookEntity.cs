@@ -1,10 +1,7 @@
-﻿using Microsoft.WindowsAzure.Storage;
-using Microsoft.WindowsAzure.Storage.Table;
-using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.WindowsAzure.Storage;
+using Microsoft.WindowsAzure.Storage.Table;
 
 namespace BookStore.Models
 {
@@ -14,14 +11,14 @@ namespace BookStore.Models
     public class BookEntity : TableEntity
     {
         /// <summary>
-        /// Table name
+        /// Database table name
         /// </summary>
         private const string PK = "Books";
 
         /// <summary>
         /// Connection string
         /// </summary>
-        private const string ConnectionStringConfig = "DefaultEndpointsProtocol=https;AccountName=bookstoredb;AccountKey=rOsF8URJRYWeVabaiOivBxT95RRR6fjUrcAwLQSI8x8siKcjnBA9Ll3Lm0DUnFTRAHqcBXUqRT93rAWadP8rSg==;TableEndpoint=https://bookstoredb.table.cosmosdb.azure.com:443/;";
+        private const string ConnectionStringConfig = "";
 
         /// <summary>
         /// Gets or sets the image url of the jacket cover of a book.
@@ -70,17 +67,7 @@ namespace BookStore.Models
         public BookEntity() { }
 
         /// <summary>
-        /// Async method to create the Book table if it doesn't exist.
-        /// </summary>
-        async void CreateBookTableAsync()
-        {
-            // Create the CloudTable if it does not exist
-            CloudTable bookTable = GetTable();
-            await bookTable.CreateIfNotExistsAsync();
-        }
-
-        /// <summary>
-        /// Insert a new entity into the Book table
+        /// Async insert a new entity into the Book table.
         /// </summary>
         /// <param name="bookDTO">The BookDTO object</param>
         public static async void CreateAsync(BookDTO bookDTO)
@@ -88,6 +75,7 @@ namespace BookStore.Models
             CloudTable bookTable = GetTable();
             await bookTable.CreateIfNotExistsAsync();
 
+            // Convert bookDTO into bookEntity
             BookEntity bookEntity = new BookEntity(bookDTO);
 
             // Create the TableOperation that inserts the customer entity.
@@ -98,7 +86,7 @@ namespace BookStore.Models
         }
 
         /// <summary>
-        /// Merge changes into an existing Book entity.
+        /// Async merge changes into an existing Book entity.
         /// </summary>
         /// <param name="bookDTO">The BookDTO object</param>
         public static async void MergeAsync(BookDTO bookDTO)
@@ -106,6 +94,7 @@ namespace BookStore.Models
             CloudTable bookTable = GetTable();
             await bookTable.CreateIfNotExistsAsync();
 
+            // Convert bookDTO into bookEntity
             BookEntity bookEntity = new BookEntity(bookDTO);
 
             // Create the TableOperation that inserts the customer entity.
@@ -116,8 +105,9 @@ namespace BookStore.Models
         }
 
         /// <summary>
-        /// Retrieve all BookEntity objects from the Book table
+        /// Async get all BookEntity objects from the Book table
         /// </summary>
+        /// <returns>List of BookEntity objects</returns>
         public static async Task<List<BookEntity>> GetAllAsync()
         {
             CloudTable bookTable = GetTable();
@@ -127,6 +117,7 @@ namespace BookStore.Models
             TableContinuationToken token = null;
             List<BookEntity> books = new List<BookEntity>();
 
+            // Retrieve all BookEntity objects
             do
             {
                 TableQuerySegment<BookEntity> resultSegment = await bookTable.ExecuteQuerySegmentedAsync(query, token);
@@ -140,6 +131,7 @@ namespace BookStore.Models
         /// <summary>
         /// Get the Book table object.
         /// </summary>
+        /// <returns>CloudTable object</returns>
         private static CloudTable GetTable()
         {
             CloudStorageAccount storageAccount = CloudStorageAccount.Parse(ConnectionStringConfig);

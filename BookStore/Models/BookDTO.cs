@@ -1,10 +1,4 @@
-﻿using Microsoft.WindowsAzure.Storage;
-using Microsoft.WindowsAzure.Storage.Table;
-using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Newtonsoft.Json;
 
 namespace BookStore.Models
 {
@@ -48,6 +42,5 @@ namespace BookStore.Models
         /// </summary>
         [JsonProperty(PropertyName = "price")]
         public double Price { get; set; }
-        
     }
 }
